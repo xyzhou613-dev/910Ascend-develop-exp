@@ -12,9 +12,21 @@
 
 | 文件 | 内容 |
 |---|---|
+| [`docs/环境与版本基线.md`](docs/环境与版本基线.md) | **当前推理后台的硬件 / 驱动 / CANN / 容器 / 框架版本**，以及在另一台 910B 上部署的前置清单（含 NPU 逻辑 ID、卡间拓扑这类容易踩的点） |
 | [`docs/踩坑清单.md`](docs/踩坑清单.md) | 工具链技能、Ascend 算子约束、数值正确性、服务运维、测量方法论、评测 harness 的坑 |
 | [`docs/负结果清单.md`](docs/负结果清单.md) | **试过但不赚钱/被推翻**的优化，附实测数字与出处 |
-| [`scripts/`](scripts/) | 可复用工具：模型启停 `modelctl.sh`、TTFT 探针、远端执行/传输包装 |
+| [`scripts/env_check.sh`](scripts/env_check.sh) | **环境自检脚本**：系统/NPU/驱动/CANN/docker/挂载/框架/NPU 冒烟/磁盘/端口，逐项 PASS-WARN-FAIL |
+| [`scripts/`](scripts/) | 其它可复用工具：模型启停 `modelctl.sh`、TTFT 探针、远端执行/传输包装 |
+
+## 上车前先跑自检
+
+```bash
+bash scripts/env_check.sh                 # 默认容器名 fnx、端口 8000
+bash scripts/env_check.sh -c mycont -p 8018
+```
+
+只读操作，不会启停服务；有 FAIL 时退出码非 0。本机当前结果：**PASS 18 / WARN 2 / FAIL 0**
+（WARN 是 `ulimit -n=1024` 和系统盘只剩 22 GB）。
 
 ## 十条贴墙规则（先看这个）
 
